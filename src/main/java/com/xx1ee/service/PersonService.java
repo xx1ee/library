@@ -24,4 +24,8 @@ public class PersonService {
     public void createPerson(Person person) {
         personRepository.createPerson(person);
     }
+    public void deletePerson(Integer id){personRepository.deletePerson(id);}
+    public void updatePerson(Person person){
+        personRepository.updatePerson(person);
+    }
 }

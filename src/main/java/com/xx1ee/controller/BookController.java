@@ -53,4 +53,19 @@ public class BookController {
         bookService.createPersonBook(id, person);
         return "redirect:/books/" + id;
     }
+    @PostMapping("/books/delete/{id}")
+    public String deleteBook(@PathVariable("id") Integer id) {
+        bookService.deleteBook(id);
+        return "redirect:/books";
+    }
+    @PostMapping("/books/update/{id}")
+    public String updateBook(@PathVariable("id") Integer id, Model model) {
+        model.addAttribute("book", bookService.getBook(id));
+        return "updateBook";
+    }
+    @PostMapping("/books/updateMethod")
+    public String updateBookMethod(@ModelAttribute("book") Book book) {
+        bookService.updateBook(book);
+        return "redirect:/books";
+    }
 }

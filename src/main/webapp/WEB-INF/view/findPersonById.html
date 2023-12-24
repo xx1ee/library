@@ -16,7 +16,12 @@
 
 <br/>
 <hr/>
-
+<form th:action="@{/people/update/{personId}(personId=${person.id})}" method="post">
+    <button type="submit">Редактировать</button>
+</form>
+<form th:action="@{/people/delete/{personId}(personId=${person.id})}" method="post">
+    <button type="submit">Удалить</button>
+</form>
 
 </body>
 </html>

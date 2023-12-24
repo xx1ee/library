@@ -37,5 +37,20 @@ public class PersonController {
         personService.createPerson(person);
         return "redirect:/people";
     }
+    @PostMapping("/people/delete/{id}")
+    public String deletePerson(@PathVariable("id") Integer id) {
+        personService.deletePerson(id);
+        return "redirect:/people";
+    }
+    @PostMapping("/people/update/{id}")
+    public String updatePerson(@PathVariable("id") Integer id, Model model) {
+        model.addAttribute("person", personService.getPerson(id));
+        return "updatePerson";
+    }
+    @PostMapping("/people/updateMethod")
+    public String updatePersonMethod(@ModelAttribute("person") Person person) {
+        personService.updatePerson(person);
+        return "redirect:/people";
+    }
 
 }

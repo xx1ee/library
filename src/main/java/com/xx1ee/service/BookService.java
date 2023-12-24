@@ -30,4 +30,10 @@ public class BookService {
     public void createPersonBook(Integer id, Person person) {
         bookRepository.createPersonBook(id, person.getId());
     }
+    public void deleteBook(Integer id) {
+        bookRepository.deleteBook(id);
+    }
+    public void updateBook(Book book){
+        bookRepository.updateBook(book);
+    }
 }

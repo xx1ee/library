@@ -193,4 +193,47 @@ public class BookRepository {
             }
         }
     }
+    public void deleteBook(Integer id) {
+        try {
+            // Подключение к базе данных PostgreSQL
+            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/lib", "postgres", "English56");
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM \"Book\" where id = ?");
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Закрытие соединения с базой данных PostgreSQL
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public void updateBook(Book book) {
+        try {
+            // Подключение к базе данных PostgreSQL
+            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/lib", "postgres", "English56");
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE \"Book\" SET name=?, author=?, year=? WHERE id = ? ");
+            preparedStatement.setString(1, book.getName());
+            preparedStatement.setString(2, book.getAuthor());
+            preparedStatement.setInt(3, book.getYear());
+            preparedStatement.setInt(4, book.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Закрытие соединения с базой данных PostgreSQL
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

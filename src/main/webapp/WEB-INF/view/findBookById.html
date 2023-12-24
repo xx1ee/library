@@ -18,11 +18,16 @@
 <div th:if="${personBooks.getFio() != null}">
     <a>Книга сейчас у:</a>
     <a th:text="${personBooks.getFio()+ ', ' + personBooks.getBirth()}">user</a>
+    <a th:href="@{/books/release/{bookId}(bookId=${book.id})}">Освободить книгу</a>
 </div>
 
 <br/>
 <hr/>
-<a th:href="@{/books/release/{bookId}(bookId=${book.id})}">Освободить книгу</a>
-
+<form th:action="@{/books/update/{bookId}(bookId=${book.id})}" method="post">
+    <button type="submit">Редактировать</button>
+</form>
+<form th:action="@{/books/delete/{bookId}(bookId=${book.id})}" method="post">
+    <button type="submit">Удалить</button>
+</form>
 </body>
 </html>

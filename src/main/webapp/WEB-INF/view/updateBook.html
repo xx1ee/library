@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update User Form</title>
+</head>
+<body>
+<h1>Страница обновления книги</h1>
+
+<form th:action="@{/books/updateMethod}" th:object="${book}" th:method="POST">
+    <input type="hidden" id="id" th:value="${book.getId()}" th:field="*{id}" required>
+    <br>
+    <label for="name">Введите название книги:</label>
+    <input type="text" id="name" th:value="${book.getName()}" th:field="*{name}" required>
+    <br>
+    <label for="author">Введите автора:</label>
+    <input type="text" id="author" th:value="${book.getAuthor()}" th:field="*{author}" required>
+    <br>
+    <label for="year">Введите год:</label>
+    <input type="text" id="year" th:value="${book.getYear()}" th:field="*{year}" required>
+
+    <input type="submit" value="Редактировать">
+</form>
+</body>
+</html>

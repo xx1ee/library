@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update User Form</title>
+</head>
+<body>
+<h1>Страница обновления человека</h1>
+
+<form th:action="@{/people/updateMethod}" th:object="${person}" th:method="POST">
+    <input type="hidden" id="id" th:value="${person.getId()}" th:field="*{id}" required>
+    <br>
+    <label for="fio">Введите ФИО:</label>
+    <input type="text" id="fio" th:value="${person.getFio()}" th:field="*{fio}" required>
+    <br>
+    <label for="birth">Введите год рождения:</label>
+    <input type="date" id="birth" th:value="${person.getBirth()}" th:field="*{birth}" required>
+
+    <input type="submit" value="Редактировать">
+</form>
+</body>
+</html>

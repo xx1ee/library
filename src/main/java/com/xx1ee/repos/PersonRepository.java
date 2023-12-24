@@ -151,4 +151,46 @@ public class PersonRepository {
             }
         }
     }
+    public void deletePerson(Integer id) {
+        try {
+            // Подключение к базе данных PostgreSQL
+            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/lib", "postgres", "English56");
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM \"Person\" where id = ?");
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Закрытие соединения с базой данных PostgreSQL
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public void updatePerson(Person person) {
+        try {
+            // Подключение к базе данных PostgreSQL
+            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/lib", "postgres", "English56");
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE \"Person\" SET fio=?, birth=? WHERE id = ? ");
+            preparedStatement.setString(1, person.getFio());
+            preparedStatement.setDate(2, person.getBirth());
+            preparedStatement.setInt(3, person.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Закрытие соединения с базой данных PostgreSQL
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
