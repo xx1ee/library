@@ -1,10 +1,22 @@
+<!-- Файл: create-user-form.html -->
+
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Create User Form</title>
 </head>
 <body>
-$END$
+<h1>Страница добавления человека</h1>
+
+<form th:action="@{/people/create}" th:object="${person}" th:method="POST">
+    <label for="fio">Введите ФИО:</label>
+    <input type="text" id="fio" th:field="*{fio}" required>
+    <br>
+    <label for="birth">Введите год рождения:</label>
+    <input type="date" id="birth" th:field="*{birth}" required>
+
+    <input type="submit" value="Create">
+</form>
 </body>
 </html>

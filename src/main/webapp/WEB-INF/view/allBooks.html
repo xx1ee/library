@@ -1,10 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>$Title$</title>
 </head>
 <body>
-$END$
+<div th:each="book : ${allBooks}">
+  <a th:href="@{/books/{id}(id=${book.getId()})}"
+     th:text="${book.author + ', ' + book.year}">book</a>
+</div>
+
+<br/>
+<hr/>
+
+<a href="/spring_jdbc_template_war_exploded/books/new">Добавить книгу</a>
+
 </body>
 </html>
