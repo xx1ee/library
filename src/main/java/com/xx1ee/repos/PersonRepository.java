@@ -2,6 +2,10 @@ package com.xx1ee.repos;
 
 import com.xx1ee.model.Book;
 import com.xx1ee.model.Person;
+import jakarta.persistence.NoResultException;
+import jakarta.transaction.Transactional;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -10,187 +14,57 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 @Repository
 public class PersonRepository {
-    private static Connection connection = null;
+    private final SessionFactory sessionFactory;
+    private Session session;
     @Autowired
-    private BookRepository bookRepository;
-    static {
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+    public PersonRepository(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
+    @Transactional
     public List<Person> findAll() {
-
-        List<Person> personList = new ArrayList<>();
-        try {
-            // Подключение к базе данных PostgreSQL
-            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/lib", "postgres", "English56");
-
-            // Запрос на получение даты из таблицы
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT id, fio, birth FROM \"Person\"");
-
-
-            // Обработка результата
-            while (resultSet.next()) {
-                personList.add(Person.builder()
-                        .id(resultSet.getInt("id"))
-                        .fio(resultSet.getString("fio"))
-                        .birth(resultSet.getDate("birth"))
-                        .build());
-            }
-
-            // Закрытие ресурсов
-            resultSet.close();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            // Закрытие соединения с базой данных PostgreSQL
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return personList;
+        session = sessionFactory.getCurrentSession();
+        return session.createNativeQuery("SELECT id, fio, birth FROM \"Person\"", Person.class).getResultList();
     }
+    @Transactional
     public Person findById(Integer id) {
-        Person person = new Person();
-        try {
-            // Подключение к базе данных PostgreSQL
-            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/lib", "postgres", "English56");
-
-            // Запрос на получение даты из таблицы
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT id, fio, birth FROM \"Person\" where id = " + id);
-
-
-            // Обработка результата
-            while (resultSet.next()) {
-                person = (Person.builder()
-                        .id(resultSet.getInt("id"))
-                        .fio(resultSet.getString("fio"))
-                        .birth(resultSet.getDate("birth"))
-                        .build());
-            }
-
-            // Закрытие ресурсов
-            resultSet.close();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            // Закрытие соединения с базой данных PostgreSQL
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return person;
+        session = sessionFactory.getCurrentSession();
+        System.out.println("jopa");
+        Person person = session.find(Person.class, id);
+        System.out.println(person.getId());
+        return session.find(Person.class, id);
     }
+    @Transactional
+    public Person findByFio(String fio) {
+        session = sessionFactory.getCurrentSession();
+        try {
+            return session.createNativeQuery("SELECT id, fio, birth FROM \"Person\" where fio = '"+fio+"'", Person.class).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+    @Transactional
     public List<Book> findBookOfPerson(Integer id) {
-        List<Book> bookList = new ArrayList<>();
-        try {
-            // Подключение к базе данных PostgreSQL
-            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/lib", "postgres", "English56");
-
-            // Запрос на получение даты из таблицы
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT person_id, book_id FROM \"PersonBooks\" where person_id = " + id);
-
-
-            // Обработка результата
-            while (resultSet.next()) {
-                bookList.add(bookRepository.findById(resultSet.getInt("book_id")));
-            }
-
-            // Закрытие ресурсов
-            resultSet.close();
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            // Закрытие соединения с базой данных PostgreSQL
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return bookList;
+        session = sessionFactory.getCurrentSession();
+        System.out.println("findbook");
+        return session.createNativeQuery("select b.book_id, b.author, b.name, b.year from \"Book\" b join \"PersonBooks\" pb on b.book_id = pb.book_id where pb.person_id = "+ id, Book.class).getResultList();
     }
+    @Transactional
     public void createPerson(Person person) {
-        try {
-            // Подключение к базе данных PostgreSQL
-            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/lib", "postgres", "English56");
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO \"Person\"(fio, birth) VALUES (?, ?)");
-            preparedStatement.setString(1, person.getFio());
-            preparedStatement.setDate(2, person.getBirth());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            // Закрытие соединения с базой данных PostgreSQL
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        session = sessionFactory.getCurrentSession();
+        session.persist(person);
     }
+    @Transactional
     public void deletePerson(Integer id) {
-        try {
-            // Подключение к базе данных PostgreSQL
-            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/lib", "postgres", "English56");
-            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM \"Person\" where id = ?");
-            preparedStatement.setInt(1, id);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            // Закрытие соединения с базой данных PostgreSQL
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        session = sessionFactory.getCurrentSession();
+        session.detach(findById(id));
     }
+    @Transactional
     public void updatePerson(Person person) {
-        try {
-            // Подключение к базе данных PostgreSQL
-            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/lib", "postgres", "English56");
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE \"Person\" SET fio=?, birth=? WHERE id = ? ");
-            preparedStatement.setString(1, person.getFio());
-            preparedStatement.setDate(2, person.getBirth());
-            preparedStatement.setInt(3, person.getId());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            // Закрытие соединения с базой данных PostgreSQL
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        session = sessionFactory.getCurrentSession();
+        session.merge(person);
     }
 }

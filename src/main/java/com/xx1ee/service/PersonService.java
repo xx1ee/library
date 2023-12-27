@@ -10,8 +10,12 @@ import java.util.List;
 
 @Service
 public class PersonService {
-    @Autowired
     PersonRepository personRepository;
+    @Autowired
+    public PersonService(PersonRepository personRepository) {
+        this.personRepository = personRepository;
+    }
+
     public List<Person> getAll() {
         return personRepository.findAll();
     }
@@ -27,5 +31,8 @@ public class PersonService {
     public void deletePerson(Integer id){personRepository.deletePerson(id);}
     public void updatePerson(Person person){
         personRepository.updatePerson(person);
+    }
+    public Person findByFio(String fio) {
+        return personRepository.findByFio(fio);
     }
 }

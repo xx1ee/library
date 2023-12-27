@@ -12,10 +12,11 @@
 <form th:action="@{/people/create}" th:object="${person}" th:method="POST">
     <label for="fio">Введите ФИО:</label>
     <input type="text" id="fio" th:field="*{fio}" required>
+    <div style="color:red" th:if="${#fields.hasErrors('fio')}" th:errors="*{fio}">fio error</div>
     <br>
     <label for="birth">Введите год рождения:</label>
     <input type="date" id="birth" th:field="*{birth}" required>
-
+    <div style="color:red" th:if="${#fields.hasErrors('birth')}" th:errors="*{birth}">birth error</div>
     <input type="submit" value="Create">
 </form>
 </body>

@@ -4,13 +4,14 @@ import com.xx1ee.model.Book;
 import com.xx1ee.model.Person;
 import com.xx1ee.service.BookService;
 import com.xx1ee.service.PersonService;
+import com.xx1ee.util.BookValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Controller
 public class BookController {
@@ -18,6 +19,8 @@ public class BookController {
     BookService bookService;
     @Autowired
     PersonService personService;
+    @Autowired
+    BookValidator bookValidator;
     @GetMapping("/books")
     public String getAllPerson(Model model) {
         model.addAttribute("allBooks", bookService.getAll());
@@ -38,7 +41,11 @@ public class BookController {
         return "createBook";
     }
     @PostMapping("/books/create")
-    public String createPerson(@ModelAttribute("book") Book book) {
+    public String createPerson(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            System.out.println(bindingResult.getAllErrors());
+            return "createBook";
+        }
         bookService.createBook(book);
         return "redirect:/books";
     }
@@ -53,7 +60,7 @@ public class BookController {
         bookService.createPersonBook(id, person);
         return "redirect:/books/" + id;
     }
-    @PostMapping("/books/delete/{id}")
+    @DeleteMapping("/books/delete/{id}")
     public String deleteBook(@PathVariable("id") Integer id) {
         bookService.deleteBook(id);
         return "redirect:/books";
