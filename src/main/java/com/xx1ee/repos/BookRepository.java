@@ -8,9 +8,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Integer> {
     Page<Book> findAll(Pageable paging);
     List<Book> findAll(Sort sort);
+    List<Book> findByNameIsStartingWith(String name);
 }

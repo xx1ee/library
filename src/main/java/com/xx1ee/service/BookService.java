@@ -71,4 +71,8 @@ public class BookService {
     public List<Book> findAll(Sort sort) {
         return bookRepository.findAll(sort);
     }
+    @Transactional
+    public List<Book> findByNameStartingWith(String name) {
+        System.out.println(bookRepository.findByNameIsStartingWith(name).get(0).getPersonList().get(0).getFio());
+        return bookRepository.findByNameIsStartingWith(name);}
 }

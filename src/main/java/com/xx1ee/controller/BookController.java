@@ -97,4 +97,17 @@ public class BookController {
         model.addAttribute("allBooks", bookService.findAll(PageRequest.of(page, pageSize, Sort.by("year"))));
         return "allBooks";
     }
+    @GetMapping("/books/search")
+    public String search(Model model) {
+        model.addAttribute("nameBook", new Book());
+        return "searchBooks";
+    }
+    @GetMapping("/books/searchName")
+    public String getBooksFindByNameStartingWith(@ModelAttribute("nameBook") Book nameBook, Model model) {
+        System.out.println(nameBook.getName());
+        System.out.println(bookService.findByNameStartingWith(nameBook.getName()).get(0).getPersonList());
+        model.addAttribute("nameBook", nameBook);
+        model.addAttribute("books", bookService.findByNameStartingWith(nameBook.getName()));
+        return "searchBooks1";
+    }
 }
