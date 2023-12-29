@@ -8,7 +8,7 @@
 <h1>Страница обновления книги</h1>
 
 <form th:action="@{/books/updateMethod}" th:object="${book}" th:method="POST">
-    <input type="hidden" id="id" th:value="${book.getId()}" th:field="*{id}" required>
+    <input type="hidden" id="id" th:value="${book.getBook_id()}" th:field="*{book_id}" required>
     <br>
     <label for="name">Введите название книги:</label>
     <input type="text" id="name" th:value="${book.getName()}" th:field="*{name}" required>

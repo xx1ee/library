@@ -1,6 +1,6 @@
 package com.xx1ee.controller;
 
-import com.xx1ee.model.Person;
+import com.xx1ee.entity.Person;
 import com.xx1ee.service.PersonService;
 import com.xx1ee.util.PersonValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,14 +10,17 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Map;
 
 @Controller
 public class PersonController {
+    private final PersonService personService;
+    private final PersonValidator personValidator;
     @Autowired
-    private PersonService personService;
-    @Autowired
-    private PersonValidator personValidator;
+    public PersonController(PersonService personService, PersonValidator personValidator) {
+        this.personService = personService;
+        this.personValidator = personValidator;
+    }
+
     @GetMapping("/people")
     public String getAllPerson(Model model) {
         model.addAttribute("all", personService.getAll());
@@ -25,7 +28,7 @@ public class PersonController {
     }
     @GetMapping("/people/{id}")
     public String getPerson(@PathVariable("id") Integer id, Model model) {
-        System.out.println(personService.getPerson(id).getId() +" "+ personService.getPerson(id).getFio());
+        System.out.println(personService.getPersonBooks(id).size());
         model.addAttribute("person", personService.getPerson(id));
         model.addAttribute("personBooks", personService.getPersonBooks(id));
         return "findPersonById";
@@ -45,7 +48,7 @@ public class PersonController {
         personService.createPerson(person);
         return "redirect:/people";
     }
-    @DeleteMapping("/people/delete/{id}")
+    @PostMapping("/people/delete/{id}")
     public String deletePerson(@PathVariable("id") Integer id) {
         personService.deletePerson(id);
         return "redirect:/people";

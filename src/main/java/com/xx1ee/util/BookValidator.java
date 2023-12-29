@@ -1,7 +1,6 @@
 package com.xx1ee.util;
 
-import com.xx1ee.model.Book;
-import com.xx1ee.model.Person;
+import com.xx1ee.entity.Book;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;

@@ -1,6 +1,6 @@
 package com.xx1ee.util;
 
-import com.xx1ee.model.Person;
+import com.xx1ee.entity.Person;
 import com.xx1ee.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

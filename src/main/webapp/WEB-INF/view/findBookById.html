@@ -5,28 +5,31 @@
 </head>
 <body>
 <a th:text="${book.getName() + ', ' + book.getAuthor() + ', ' + book.getYear()}">user</a><br><hr/>
-<div th:if="${personBooks.getFio() == null}">
+<div th:if="${personBooks == null}">
     <p>Эта книга свободна. Кому назначить ее?</p>
-    <form th:action="@{/books/appoint/{bookId}(bookId=${book.id})}"  method="post">
+    <form th:action="@{/books/appoint/{bookId}(bookId=${book.getBook_id()})}"  method="post">
         <label for="person">Выберите человека</label>
-        <select th:object="${person}" th:field="*{id}" id="person">
-            <option th:each="person : ${allPersons}" th:value="${person.getId()}" th:text="${person.getFio()}"></option>
+        <select th:object="${person}" th:field="*{person_id}" id="person">
+            <option th:each="person : ${allPersons}" th:value="${person.getPerson_id()}" th:text="${person.getFio()}"></option>
         </select>
         <input type="submit" value="Назначить книгу"></input>
     </form>
 </div>
-<div th:if="${personBooks.getFio() != null}">
+<div th:if="${personBooks != null}">
     <a>Книга сейчас у:</a>
     <a th:text="${personBooks.getFio()+ ', ' + personBooks.getBirth()}">user</a>
-    <a th:href="@{/books/release/{bookId}(bookId=${book.id})}">Освободить книгу</a>
+    <form th:action="@{/books/release/{bookId}(bookId=${book.getBook_id()})}" th:object="${personBooks}" th:method="POST">
+        <input type="hidden" id="person_id" th:value="${personBooks.getPerson_id()}" th:field="*{person_id}" required>
+        <input type="submit" value="Освободить книгу">
+    </form>
 </div>
 
 <br/>
 <hr/>
-<form th:action="@{/books/update/{bookId}(bookId=${book.id})}" method="post">
+<form th:action="@{/books/update/{bookId}(bookId=${book.getBook_id()})}" method="post">
     <button type="submit">Редактировать</button>
 </form>
-<form th:action="@{/books/delete/{bookId}(bookId=${book.id})}" method="post">
+<form th:action="@{/books/delete/{bookId}(bookId=${book.getBook_id()})}" method="post">
     <button type="submit">Удалить</button>
 </form>
 </body>

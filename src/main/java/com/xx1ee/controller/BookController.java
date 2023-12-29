@@ -1,11 +1,14 @@
 package com.xx1ee.controller;
 
-import com.xx1ee.model.Book;
-import com.xx1ee.model.Person;
+import com.xx1ee.entity.Book;
+import com.xx1ee.entity.Person;
 import com.xx1ee.service.BookService;
 import com.xx1ee.service.PersonService;
 import com.xx1ee.util.BookValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,12 +18,16 @@ import javax.validation.Valid;
 
 @Controller
 public class BookController {
-    @Autowired
     BookService bookService;
-    @Autowired
     PersonService personService;
-    @Autowired
     BookValidator bookValidator;
+    @Autowired
+    public BookController(BookService bookService, PersonService personService, BookValidator bookValidator) {
+        this.bookService = bookService;
+        this.personService = personService;
+        this.bookValidator = bookValidator;
+    }
+
     @GetMapping("/books")
     public String getAllPerson(Model model) {
         model.addAttribute("allBooks", bookService.getAll());
@@ -49,10 +56,10 @@ public class BookController {
         bookService.createBook(book);
         return "redirect:/books";
     }
-    @GetMapping("/books/release/{id}")
-    public String releaseBook(@PathVariable("id") Integer id) {
-        System.out.println(bookService.getBook(id).getName());
-        bookService.releaseBook(bookService.getBook(id));
+    @PostMapping("/books/release/{id}")
+    public String releaseBook(@PathVariable("id") Integer id, @ModelAttribute("personBooks") Person person) {
+        System.out.println(id + " " + person.getPerson_id());
+        bookService.releaseBook(id, person.getPerson_id());
         return "redirect:/books/" + id;
     }
     @PostMapping("/books/appoint/{id}")
@@ -74,5 +81,20 @@ public class BookController {
     public String updateBookMethod(@ModelAttribute("book") Book book) {
         bookService.updateBook(book);
         return "redirect:/books";
+    }
+    @GetMapping("/books/{page}/{pageSize}")
+    public String getBooks(@PathVariable("page") Integer page,@PathVariable("pageSize") Integer pageSize, Model model) {
+        model.addAttribute("allBooks", bookService.findAll(PageRequest.of(page, pageSize)).getContent());
+        return "allBooks";
+    }
+    @GetMapping("/books/sort_by_year")
+    public String getBooks(Model model) {
+        model.addAttribute("allBooks", bookService.findAll(Sort.by("year")));
+        return "allBooks";
+    }
+    @GetMapping("/books/{page}/{pageSize}/sort_by_year")
+    public String getCombo(@PathVariable("page") Integer page, @PathVariable("pageSize") Integer pageSize, Model model) {
+        model.addAttribute("allBooks", bookService.findAll(PageRequest.of(page, pageSize, Sort.by("year"))));
+        return "allBooks";
     }
 }

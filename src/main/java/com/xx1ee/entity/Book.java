@@ -1,19 +1,18 @@
-package com.xx1ee.model;
+package com.xx1ee.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.context.annotation.Bean;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
+import java.util.List;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Builder
-@Entity
 @Table(name = "\"Book\"")
+@Entity
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,4 +23,7 @@ public class Book {
     String author;
     @NotEmpty(message = "Год не должен быть пустым")
     Integer year;
+    @ManyToMany
+    @JoinTable(name = "\"PersonBooks\"", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "person_id"))
+    private List<Person> personList;
 }

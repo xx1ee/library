@@ -8,7 +8,7 @@
 <h1>Страница обновления человека</h1>
 
 <form th:action="@{/people/updateMethod}" th:object="${person}" th:method="POST">
-    <input type="hidden" id="id" th:value="${person.getId()}" th:field="*{id}" required>
+    <input type="hidden" id="id" th:value="${person.getPerson_id()}" th:field="*{person_id}" required>
     <br>
     <label for="fio">Введите ФИО:</label>
     <input type="text" id="fio" th:value="${person.getFio()}" th:field="*{fio}" required>

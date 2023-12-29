@@ -1,10 +1,12 @@
-package com.xx1ee.model;
+package com.xx1ee.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
 import java.sql.Date;
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -15,9 +17,11 @@ import java.sql.Date;
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    Integer person_id;
     @NotEmpty(message = "Имя не должно быть пустым")
     String fio;
     @NotEmpty(message = "Дата не должна быть пустой")
     Date birth;
+    @ManyToMany(mappedBy = "personList")
+    private List<Book> bookList;
 }
