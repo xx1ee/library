@@ -10,7 +10,12 @@
 </div>
 <div th:if="${personBooks.size() > 0}">
     <div th:each="book : ${personBooks}">
-        <a th:text="${book.getName()+ ', ' + book.getAuthor() + ', ' + book.getYear()}">user</a>
+        <div style="color: red" th:if="${book.getOverdue() == true}">
+            <a th:text="${book.book.getName()+ ', ' + book.book.getAuthor() + ', ' + book.book.getYear()}">user</a>
+        </div>
+        <div th:if="${book.getOverdue() != true}">
+            <a th:text="${book.book.getName()+ ', ' + book.book.getAuthor() + ', ' + book.book.getYear()}">user</a>
+        </div>
     </div>
 </div>
 

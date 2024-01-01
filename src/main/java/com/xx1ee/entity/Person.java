@@ -22,6 +22,6 @@ public class Person {
     String fio;
     @NotEmpty(message = "Дата не должна быть пустой")
     Date birth;
-    @ManyToMany(mappedBy = "personList")
-    private List<Book> bookList;
+    @OneToMany(mappedBy = "person")
+    private List<PersonBooks> bookList;
 }

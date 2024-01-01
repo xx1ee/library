@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,7 +25,7 @@ public class Book {
     String author;
     @NotEmpty(message = "Год не должен быть пустым")
     Integer year;
-    @ManyToMany
-    @JoinTable(name = "\"PersonBooks\"", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "person_id"))
-    private List<Person> personList;
+
+    @OneToMany(mappedBy = "book")
+    private List<PersonBooks> personList;
 }

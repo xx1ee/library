@@ -105,7 +105,7 @@ public class BookController {
     @GetMapping("/books/searchName")
     public String getBooksFindByNameStartingWith(@ModelAttribute("nameBook") Book nameBook, Model model) {
         System.out.println(nameBook.getName());
-        System.out.println(bookService.findByNameStartingWith(nameBook.getName()).get(0).getPersonList());
+        //System.out.println(bookService.findByNameStartingWith(nameBook.getName()).get(0).getPersonList());
         model.addAttribute("nameBook", nameBook);
         model.addAttribute("books", bookService.findByNameStartingWith(nameBook.getName()));
         return "searchBooks1";
